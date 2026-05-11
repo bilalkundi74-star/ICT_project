@@ -4,98 +4,252 @@ import streamlit as st
 st.set_page_config(
     page_title="Mechanical Unit Converter",
     page_icon="⚙️",
-    layout="centered"
+    layout="wide"
 )
+
+# ---------------- CUSTOM CSS ----------------
+st.markdown("""
+<style>
+
+.main {
+    background-color: #f4f4f4;
+}
+
+h1, h2, h3 {
+    color: #2c3e50;
+}
+
+.stButton>button {
+    background-color: #5d6d7e;
+    color: white;
+    border-radius: 10px;
+}
+
+.stSelectbox div[data-baseweb="select"] {
+    background-color: #ecf0f1;
+    border-radius: 8px;
+}
+
+.info-box {
+    background-color: #d5dbdb;
+    padding: 15px;
+    border-radius: 12px;
+    color: #1c2833;
+    margin-bottom: 20px;
+}
+
+.result-box {
+    background-color: #ebedef;
+    padding: 15px;
+    border-radius: 12px;
+    color: #212f3d;
+    margin-top: 15px;
+}
+
+footer {
+    visibility: hidden;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 # ---------------- HEADER ----------------
-st.title("⚙️ Mechanical Unit Converter & Density Checker")
+st.title("⚙️ Mechanical Unit Converter & Material Density Checker")
 
 st.markdown("""
-### Developed By:
+<div class="info-box">
+
+### Developed By  
 **Muhammad Bilal Kundi**  
 **Reg No: 25R/24-ME-88**
-""")
 
-# ---------------- SIDEBAR ----------------
-option = st.sidebar.selectbox(
-    "Choose Tool",
-    ["Unit Converter", "Material Density Checker"]
-)
+</div>
+""", unsafe_allow_html=True)
 
-# ---------------- UNIT CONVERTER ----------------
-if option == "Unit Converter":
+# ---------------- LAYOUT ----------------
+main_col, side_col = st.columns([4, 1])
 
-    st.header("🔄 Unit Converter")
+# ---------------- RIGHT SIDE TOOL PANEL ----------------
+with side_col:
 
-    category = st.selectbox(
-        "Select Conversion Type",
-        ["Length", "Pressure", "Temperature"]
+    st.markdown("## 🛠️ Tools")
+
+    option = st.radio(
+        "Choose Tool",
+        ["Unit Converter", "Material Density Checker"]
     )
 
-    # LENGTH
-    if category == "Length":
+# ---------------- MAIN CONTENT ----------------
+with main_col:
 
-        meter = st.number_input("Enter Length in Meters", value=1.0)
+    # =====================================================
+    # UNIT CONVERTER
+    # =====================================================
+    if option == "Unit Converter":
 
-        cm = meter * 100
-        mm = meter * 1000
-        inch = meter * 39.3701
-        feet = meter * 3.28084
+        st.header("🔄 Mechanical Unit Converter")
 
-        st.write(f"Centimeters: {cm}")
-        st.write(f"Millimeters: {mm}")
-        st.write(f"Inches: {inch}")
-        st.write(f"Feet: {feet}")
+        category = st.selectbox(
+            "Select Conversion Type",
+            [
+                "Length",
+                "Pressure",
+                "Temperature",
+                "Force",
+                "Velocity",
+                "Power"
+            ]
+        )
 
-    # PRESSURE
-    elif category == "Pressure":
+        # ---------------- LENGTH ----------------
+        if category == "Length":
 
-        pa = st.number_input("Enter Pressure in Pascal", value=1.0)
+            meter = st.number_input("Enter Length in Meters", value=1.0)
 
-        kpa = pa / 1000
-        bar = pa / 100000
-        psi = pa * 0.000145038
+            st.markdown(f"""
+            <div class="result-box">
 
-        st.write(f"kPa: {kpa}")
-        st.write(f"Bar: {bar}")
-        st.write(f"PSI: {psi}")
+            ### Results
 
-    # TEMPERATURE
-    elif category == "Temperature":
+            - Centimeters = {meter * 100:.2f} cm  
+            - Millimeters = {meter * 1000:.2f} mm  
+            - Inches = {meter * 39.3701:.2f} in  
+            - Feet = {meter * 3.28084:.2f} ft
 
-        celsius = st.number_input("Enter Temperature in Celsius", value=0.0)
+            </div>
+            """, unsafe_allow_html=True)
 
-        fahrenheit = (celsius * 9/5) + 32
-        kelvin = celsius + 273.15
+        # ---------------- PRESSURE ----------------
+        elif category == "Pressure":
 
-        st.write(f"Fahrenheit: {fahrenheit}")
-        st.write(f"Kelvin: {kelvin}")
+            pa = st.number_input("Enter Pressure in Pascal", value=1.0)
 
-# ---------------- DENSITY CHECKER ----------------
-elif option == "Material Density Checker":
+            st.markdown(f"""
+            <div class="result-box">
 
-    st.header("🧱 Material Density Checker")
+            ### Results
 
-    materials = {
-        "Steel": 7850,
-        "Aluminum": 2700,
-        "Copper": 8960,
-        "Brass": 8500,
-        "Titanium": 4500,
-        "Cast Iron": 7200
-    }
+            - kPa = {pa / 1000:.4f}  
+            - Bar = {pa / 100000:.6f}  
+            - PSI = {pa * 0.000145038:.6f}
 
-    material = st.selectbox(
-        "Select Material",
-        list(materials.keys())
-    )
+            </div>
+            """, unsafe_allow_html=True)
 
-    density = materials[material]
+        # ---------------- TEMPERATURE ----------------
+        elif category == "Temperature":
 
-    st.success(f"Density of {material} = {density} kg/m³")
+            celsius = st.number_input("Enter Temperature in Celsius", value=0.0)
+
+            fahrenheit = (celsius * 9/5) + 32
+            kelvin = celsius + 273.15
+
+            st.markdown(f"""
+            <div class="result-box">
+
+            ### Results
+
+            - Fahrenheit = {fahrenheit:.2f} °F  
+            - Kelvin = {kelvin:.2f} K
+
+            </div>
+            """, unsafe_allow_html=True)
+
+        # ---------------- FORCE ----------------
+        elif category == "Force":
+
+            newton = st.number_input("Enter Force in Newton", value=1.0)
+
+            st.markdown(f"""
+            <div class="result-box">
+
+            ### Results
+
+            - Kilonewton = {newton / 1000:.4f} kN  
+            - Pound-force = {newton * 0.224809:.4f} lbf
+
+            </div>
+            """, unsafe_allow_html=True)
+
+        # ---------------- VELOCITY ----------------
+        elif category == "Velocity":
+
+            ms = st.number_input("Enter Velocity in m/s", value=1.0)
+
+            st.markdown(f"""
+            <div class="result-box">
+
+            ### Results
+
+            - km/h = {ms * 3.6:.2f}  
+            - mph = {ms * 2.23694:.2f}
+
+            </div>
+            """, unsafe_allow_html=True)
+
+        # ---------------- POWER ----------------
+        elif category == "Power":
+
+            watt = st.number_input("Enter Power in Watt", value=1.0)
+
+            st.markdown(f"""
+            <div class="result-box">
+
+            ### Results
+
+            - Kilowatt = {watt / 1000:.4f} kW  
+            - Horsepower = {watt * 0.00134102:.4f} hp
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    # =====================================================
+    # DENSITY CHECKER
+    # =====================================================
+    elif option == "Material Density Checker":
+
+        st.header("🧱 Material Density Checker")
+
+        materials = {
+            "Steel": 7850,
+            "Stainless Steel": 8000,
+            "Aluminum": 2700,
+            "Copper": 8960,
+            "Brass": 8500,
+            "Bronze": 8800,
+            "Titanium": 4500,
+            "Cast Iron": 7200,
+            "Lead": 11340,
+            "Zinc": 7135,
+            "Nickel": 8908,
+            "Magnesium": 1740,
+            "Concrete": 2400,
+            "Glass": 2500,
+            "Rubber": 1522,
+            "PVC Plastic": 1380,
+            "Wood": 700,
+            "Gold": 19300,
+            "Silver": 10490
+        }
+
+        material = st.selectbox(
+            "Select Material",
+            list(materials.keys())
+        )
+
+        density = materials[material]
+
+        st.markdown(f"""
+        <div class="result-box">
+
+        ### Density Result
+
+        **{material}**  
+        Density = **{density} kg/m³**
+
+        </div>
+        """, unsafe_allow_html=True)
 
 # ---------------- FOOTER ----------------
 st.markdown("---")
-st.markdown(
-    "Made with Streamlit by Muhammad Bilal Kundi"
-)
+st.caption("Made with Streamlit by Muhammad Bilal Kundi")
